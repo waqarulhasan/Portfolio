@@ -100,7 +100,6 @@ export default function Home() {
             <p className="tagline">{profile.tagline}</p>
             <div className="row">
               <a href="#work" className="btn btn-dark">See the projects</a>
-              <a href={profile.cvUrl} className="btn btn-ghost">Download CV</a>
             </div>
           </div>
           <aside className="record">
