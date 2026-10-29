@@ -1,0 +1,1 @@
+export default function Home(){return (<main className="min-h-screen bg-black text-white"><section className="p-20 text-center"><h1 className="text-6xl font-bold">Waqar UL Hassan</h1><p className="mt-4 text-2xl">Full-Stack Software Engineer</p><p className="mt-4">waqarulhassan2040@gmail.com | 03337419194</p></section></main>)}
