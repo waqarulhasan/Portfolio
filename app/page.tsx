@@ -13,7 +13,7 @@ const profile = {
   tagline:
     "Building scalable web, mobile, and cloud solutions with ASP.NET Core, Angular, React, React Native, .NET MAUI, Azure, and AWS.",
   about:
-    "Full-Stack Software Engineer with more than 6 years of experience delivering enterprise web applications, mobile applications, SaaS solutions, and cloud-native systems for international clients.",
+    "Full-Stack Software Engineer with more than 7 years of experience delivering enterprise web applications, mobile applications, SaaS solutions, and cloud-native systems for international clients.",
   email: "waqarulhassan2040@gmail.com",
   phone: "03337419194",
   cvUrl: "/cv.pdf", // put your CV in /public/cv.pdf
@@ -22,7 +22,7 @@ const profile = {
     // { label: "LinkedIn", href: "https://linkedin.com/in/your-username" },
   ] as { label: string; href: string }[],
   stats: [
-    { value: "6+", label: "Years experience" },
+    { value: "7+", label: "Years experience" },
     { value: "30+", label: "Projects delivered" },
     { value: "10+", label: "Technologies" },
   ],
