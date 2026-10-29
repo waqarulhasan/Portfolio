@@ -1,4 +1,4 @@
-// app/page.tsx — Next.js (App Router) + Tailwind CSS
+// app/page.tsx — Next.js (App Router). No Tailwind needed: the styles are at the bottom of this file.
 // Edit only the `profile` object below; the layout updates automatically.
 
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
@@ -62,12 +62,9 @@ const profile = {
   ],
 };
 
-
 // Groups projects into product families by name; everything else is "Other products".
 const FAMILIES = ["VZTA", "Guul Prime", "YouBega", "Bee"];
-function familyOf(name: string) {
-  return FAMILIES.find((f) => name.startsWith(f)) ?? "Other products";
-}
+const familyOf = (name: string) => FAMILIES.find((f) => name.startsWith(f)) ?? "Other products";
 const families = [...FAMILIES, "Other products"]
   .map((f) => ({ name: f === "Bee" ? "Beewen (BeeCam & BeeStore)" : f, items: profile.projects.filter((p) => familyOf(p.name) === f) }))
   .filter((g) => g.items.length > 0);
@@ -75,186 +72,218 @@ const families = [...FAMILIES, "Other products"]
 export default function Home() {
   const initials = profile.name.split(" ").map((w) => w[0]).join("").slice(0, 2);
   return (
-    <main className={`${display.variable} ${body.variable} min-h-screen bg-[#EEF0F3] font-[family-name:var(--font-body)] text-[#121A2B] antialiased selection:bg-[#F2B632]/60`}>
-      <a href="#work" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-2">
-        Skip to projects
-      </a>
+    <main className={`pf ${display.variable} ${body.variable}`}>
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      <a href="#work" className="skip">Skip to projects</a>
 
-      {/* nav */}
-      <header className="sticky top-0 z-30 border-b border-[#121A2B]/10 bg-[#EEF0F3]/85 backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
-          <a href="#" className="flex items-center gap-3 font-semibold">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#121A2B] text-sm text-[#F2B632]">{initials}</span>
-            <span className="hidden sm:inline">{profile.name}</span>
+      <header className="nav">
+        <nav className="wrap nav-in">
+          <a href="#" className="brand">
+            <span className="mono">{initials}</span>
+            <span className="brand-name">{profile.name}</span>
           </a>
-          <div className="flex items-center gap-5 text-sm text-[#5B6578] sm:gap-7">
-            <a href="#work" className="hover:text-[#121A2B]">Work</a>
-            <a href="#experience" className="hover:text-[#121A2B]">Experience</a>
-            <a href="#skills" className="hidden hover:text-[#121A2B] sm:inline">Skills</a>
-            <a href={`mailto:${profile.email}`} className="rounded-full bg-[#2F4BDB] px-4 py-2 font-medium text-white hover:bg-[#2338B0]">
-              Email me
-            </a>
+          <div className="links">
+            <a href="#work">Work</a>
+            <a href="#experience">Experience</a>
+            <a href="#skills" className="hide-sm">Skills</a>
+            <a href={`mailto:${profile.email}`} className="btn btn-blue">Email me</a>
           </div>
         </nav>
       </header>
 
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        {/* hero */}
-        <section className="grid gap-12 py-20 sm:py-28 lg:grid-cols-[1.5fr_1fr] lg:items-end">
+      <div className="wrap">
+        <section className="hero">
           <div>
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-[#5B6578] shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#1FA971]" /> Available for new projects
-            </p>
-            <h1 className="font-[family-name:var(--font-display)] text-[clamp(3rem,9vw,6.5rem)] font-extrabold leading-[0.92] tracking-[-0.04em]">
-              {profile.name}
-            </h1>
-            <p className="mt-6 text-xl font-medium text-[#2F4BDB] sm:text-2xl">{profile.title}</p>
-            <p className="mt-4 max-w-[34rem] text-lg leading-relaxed text-[#5B6578]">{profile.tagline}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#work" className="rounded-full bg-[#121A2B] px-6 py-3 font-medium text-white hover:bg-[#2F4BDB]">
-                See the projects
-              </a>
-              <a href={profile.cvUrl} className="rounded-full border border-[#121A2B]/20 bg-white px-6 py-3 font-medium hover:border-[#121A2B]">
-                Download CV
-              </a>
+            <p className="badge"><span className="dot" /> Available for new projects</p>
+            <h1 className="name">{profile.name}</h1>
+            <p className="title">{profile.title}</p>
+            <p className="tagline">{profile.tagline}</p>
+            <div className="row">
+              <a href="#work" className="btn btn-dark">See the projects</a>
+              <a href={profile.cvUrl} className="btn btn-ghost">Download CV</a>
             </div>
           </div>
-
-          {/* delivery summary — the one bold element */}
-          <aside className="rounded-3xl bg-[#121A2B] p-7 text-white">
-            <p className="text-sm text-white/60">Delivery record</p>
-            <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-7">
-              {profile.stats.map((s) => (
+          <aside className="record">
+            <p className="record-label">Delivery record</p>
+            <dl>
+              {[...profile.stats, { value: String(profile.projects.length), label: "Shown here" }].map((s) => (
                 <div key={s.label}>
-                  <dt className="text-sm text-white/60">{s.label}</dt>
-                  <dd className="font-[family-name:var(--font-display)] text-4xl font-bold text-[#F2B632]">{s.value}</dd>
+                  <dt>{s.label}</dt>
+                  <dd>{s.value}</dd>
                 </div>
               ))}
-              <div>
-                <dt className="text-sm text-white/60">Shown here</dt>
-                <dd className="font-[family-name:var(--font-display)] text-4xl font-bold text-[#F2B632]">{profile.projects.length}</dd>
-              </div>
             </dl>
           </aside>
         </section>
 
-        {/* about */}
-        <section className="grid gap-6 border-t border-[#121A2B]/10 py-16 lg:grid-cols-[1fr_2fr]">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight">About</h2>
-          <p className="max-w-[40rem] text-lg leading-relaxed text-[#3A4456]">{profile.about}</p>
+        <section className="split">
+          <h2 className="h2">About</h2>
+          <p className="lead">{profile.about}</p>
         </section>
 
-        {/* work */}
-        <section id="work" className="scroll-mt-24 border-t border-[#121A2B]/10 py-16">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight sm:text-5xl">Selected work</h2>
-            <p className="text-[#5B6578]">{profile.projects.length} projects across {families.length} product families</p>
+        <section id="work" className="block">
+          <div className="work-head">
+            <h2 className="h2 big">Selected work</h2>
+            <p className="muted">{profile.projects.length} projects across {families.length} product families</p>
           </div>
-
-          <div className="space-y-10">
-            {families.map((g) => (
-              <div key={g.name} className="overflow-hidden rounded-3xl bg-white shadow-[0_1px_0_rgba(18,26,43,0.06)]">
-                <h3 className="flex items-center justify-between border-b border-[#121A2B]/8 px-6 py-4 font-[family-name:var(--font-display)] text-lg font-semibold sm:px-8">
-                  {g.name}
-                  <span className="rounded-full bg-[#EEF0F3] px-2.5 py-0.5 text-sm font-medium text-[#5B6578]">{g.items.length}</span>
-                </h3>
-                <ul>
-                  {g.items.map((p) => (
-                    <li key={p.name} className="grid gap-3 border-b border-[#121A2B]/8 px-6 py-6 last:border-0 sm:px-8 md:grid-cols-[14rem_1fr_auto] md:gap-8">
-                      <div>
-                        <p className="font-semibold leading-snug">{p.name}</p>
-                        {p.role && <p className="mt-1 text-sm text-[#2F4BDB]">{p.role}</p>}
-                      </div>
-                      <div>
-                        <p className="max-w-[38rem] leading-relaxed text-[#3A4456]">{p.description}</p>
-                        {p.tech.length > 0 && (
-                          <ul className="mt-3 flex flex-wrap gap-1.5">
-                            {p.tech.map((t) => (
-                              <li key={t} className="rounded-md bg-[#EEF0F3] px-2 py-0.5 text-xs text-[#5B6578]">{t}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                      {p.link ? (
-                        <a
-                          href={p.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="h-fit w-fit whitespace-nowrap rounded-full border border-[#121A2B]/15 px-4 py-1.5 text-sm font-medium hover:border-[#2F4BDB] hover:bg-[#2F4BDB] hover:text-white"
-                        >
-                          Visit site
-                        </a>
-                      ) : (
-                        <span />
+          {families.map((g) => (
+            <div key={g.name} className="family">
+              <h3 className="family-head">
+                {g.name}
+                <span className="count">{g.items.length}</span>
+              </h3>
+              <ul className="plain">
+                {g.items.map((p) => (
+                  <li key={p.name} className="proj">
+                    <div>
+                      <p className="proj-name">{p.name}</p>
+                      {p.role && <p className="proj-role">{p.role}</p>}
+                    </div>
+                    <div>
+                      <p className="proj-desc">{p.description}</p>
+                      {p.tech.length > 0 && (
+                        <ul className="plain tags">
+                          {p.tech.map((t) => <li key={t}>{t}</li>)}
+                        </ul>
                       )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+                    </div>
+                    {p.link ? (
+                      <a href={p.link} target="_blank" rel="noreferrer" className="btn btn-small">Visit site</a>
+                    ) : <span />}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </section>
 
-        {/* experience */}
-        <section id="experience" className="scroll-mt-24 grid gap-8 border-t border-[#121A2B]/10 py-16 lg:grid-cols-[1fr_2fr]">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight">Experience</h2>
-          <ol className="relative space-y-8 border-l-2 border-[#121A2B]/10 pl-7">
+        <section id="experience" className="split">
+          <h2 className="h2">Experience</h2>
+          <ol className="plain timeline">
             {profile.experience.map((e, i) => (
-              <li key={e.role + e.company} className="relative">
-                <span className={`absolute -left-[37px] top-1.5 h-4 w-4 rounded-full border-4 border-[#EEF0F3] ${i === 0 ? "bg-[#F2B632]" : "bg-[#121A2B]/30"}`} />
-                <p className="font-semibold">{e.role}</p>
-                <p className="text-[#5B6578]">
+              <li key={e.role + e.company} className={i === 0 ? "now" : ""}>
+                <p className="proj-name">{e.role}</p>
+                <p className="muted">
                   {e.company}
-                  {e.period && <span className="ml-2 text-sm">({e.period})</span>}
+                  {e.period && <span className="period">({e.period})</span>}
                 </p>
-                {e.points.length > 0 && (
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-[#3A4456]">
-                    {e.points.map((pt) => <li key={pt}>{pt}</li>)}
-                  </ul>
-                )}
+                {e.points.length > 0 && <ul className="points">{e.points.map((pt) => <li key={pt}>{pt}</li>)}</ul>}
               </li>
             ))}
           </ol>
         </section>
 
-        {/* skills */}
-        <section id="skills" className="scroll-mt-24 grid gap-8 border-t border-[#121A2B]/10 py-16 lg:grid-cols-[1fr_2fr]">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight">Skills</h2>
-          <div className="grid gap-8 sm:grid-cols-2">
+        <section id="skills" className="split">
+          <h2 className="h2">Skills</h2>
+          <div className="skills">
             {Object.entries(profile.skills).map(([group, items]) => (
               <div key={group}>
-                <h3 className="mb-3 font-semibold">{group}</h3>
-                <p className="leading-relaxed text-[#3A4456]">{items.join(", ")}</p>
+                <h3 className="skill-head">{group}</h3>
+                <p className="body-text">{items.join(", ")}</p>
               </div>
             ))}
           </div>
         </section>
       </div>
 
-      {/* contact */}
-      <section className="bg-[#121A2B] text-white">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 className="max-w-[18ch] font-[family-name:var(--font-display)] text-[clamp(2.25rem,6vw,4.5rem)] font-extrabold leading-[0.95] tracking-[-0.03em]">
-            Have a product to build? Let’s talk.
-          </h2>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a href={`mailto:${profile.email}`} className="rounded-full bg-[#F2B632] px-6 py-3 font-semibold text-[#121A2B] hover:bg-white">
-              {profile.email}
-            </a>
-            {profile.phone && (
-              <a href={`tel:${profile.phone}`} className="rounded-full border border-white/25 px-6 py-3 font-medium hover:border-white">
-                Call {profile.phone}
-              </a>
-            )}
+      <section className="contact">
+        <div className="wrap">
+          <h2 className="contact-title">Have a product to build? Let’s talk.</h2>
+          <div className="row">
+            <a href={`mailto:${profile.email}`} className="btn btn-yellow">{profile.email}</a>
+            {profile.phone && <a href={`tel:${profile.phone}`} className="btn btn-outline">Call {profile.phone}</a>}
             {profile.socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="rounded-full border border-white/25 px-6 py-3 font-medium hover:border-white">
-                {s.label}
-              </a>
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="btn btn-outline">{s.label}</a>
             ))}
           </div>
-          <p className="mt-16 text-sm text-white/50">© {new Date().getFullYear()} {profile.name}</p>
+          <p className="copy">© {new Date().getFullYear()} {profile.name}</p>
         </div>
       </section>
     </main>
   );
 }
+
+const css = `
+.pf{--fog:#EEF0F3;--paper:#fff;--ink:#121A2B;--text:#3A4456;--slate:#5B6578;--blue:#2F4BDB;--blue-d:#2338B0;--sun:#F2B632;--line:rgba(18,26,43,.1);
+  min-height:100vh;background:var(--fog);color:var(--ink);font-family:var(--font-body),system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background:#EEF0F3}
+.pf *{box-sizing:border-box}
+.pf p,.pf h1,.pf h2,.pf h3,.pf dl,.pf dd{margin:0}
+.pf a{color:inherit;text-decoration:none}
+.pf a:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:999px}
+.pf ::selection{background:rgba(242,182,50,.6)}
+.plain{list-style:none;margin:0;padding:0}
+.wrap{max-width:72rem;margin:0 auto;padding:0 1.25rem}
+@media(min-width:640px){.wrap{padding:0 2rem}}
+.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;position:fixed;z-index:50;background:#fff;padding:.5rem 1rem;border-radius:.5rem}
+
+.nav{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:rgba(238,240,243,.85);backdrop-filter:blur(8px)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;padding-bottom:.75rem}
+.brand{display:flex;align-items:center;gap:.75rem;font-weight:600}
+.mono{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--ink);color:var(--sun);font-size:.85rem}
+.links{display:flex;align-items:center;gap:1.25rem;font-size:.9rem;color:var(--slate)}
+.links a:not(.btn):hover{color:var(--ink)}
+@media(max-width:639px){.brand-name,.hide-sm{display:none}}
+
+.btn{display:inline-block;border-radius:999px;padding:.75rem 1.5rem;font-weight:500;transition:background .15s,border-color .15s,color .15s;white-space:nowrap}
+.btn-blue{background:var(--blue);color:#fff!important;padding:.5rem 1rem}.btn-blue:hover{background:var(--blue-d)}
+.btn-dark{background:var(--ink);color:#fff!important}.btn-dark:hover{background:var(--blue)}
+.btn-ghost{background:#fff;border:1px solid rgba(18,26,43,.2)}.btn-ghost:hover{border-color:var(--ink)}
+.btn-small{padding:.4rem 1rem;font-size:.875rem;border:1px solid rgba(18,26,43,.15);height:fit-content;width:fit-content}
+.btn-small:hover{background:var(--blue);border-color:var(--blue);color:#fff!important}
+.btn-yellow{background:var(--sun);color:var(--ink)!important;font-weight:600}.btn-yellow:hover{background:#fff}
+.btn-outline{border:1px solid rgba(255,255,255,.25)}.btn-outline:hover{border-color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2.25rem}
+
+.hero{display:grid;gap:3rem;padding:5rem 0}
+@media(min-width:1024px){.hero{grid-template-columns:1.5fr 1fr;align-items:end;padding:7rem 0}}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border-radius:999px;padding:.35rem .8rem;font-size:.875rem;color:var(--slate);margin-bottom:1.5rem!important;box-shadow:0 1px 2px rgba(18,26,43,.06)}
+.dot{width:.5rem;height:.5rem;border-radius:50%;background:#1FA971}
+.name{font-family:var(--font-display),sans-serif;font-size:clamp(3rem,9vw,6.5rem);font-weight:800;line-height:.92;letter-spacing:-.04em}
+.title{margin-top:1.5rem!important;font-size:clamp(1.25rem,2.5vw,1.5rem);font-weight:500;color:var(--blue)}
+.tagline{margin-top:1rem!important;max-width:34rem;font-size:1.125rem;line-height:1.65;color:var(--slate)}
+
+.record{background:var(--ink);color:#fff;border-radius:1.5rem;padding:1.75rem}
+.record-label,.record dt{font-size:.875rem;color:rgba(255,255,255,.6)}
+.record dl{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem 1.5rem;margin-top:1.25rem}
+.record dd{font-family:var(--font-display),sans-serif;font-size:2.25rem;font-weight:700;color:var(--sun)}
+
+.split{display:grid;gap:1.5rem 2rem;border-top:1px solid var(--line);padding:4rem 0;scroll-margin-top:5rem}
+@media(min-width:1024px){.split{grid-template-columns:1fr 2fr}}
+.block{border-top:1px solid var(--line);padding:4rem 0;scroll-margin-top:5rem}
+.h2{font-family:var(--font-display),sans-serif;font-size:1.875rem;font-weight:700;letter-spacing:-.02em}
+.h2.big{font-size:clamp(2.25rem,5vw,3rem)}
+.lead{max-width:40rem;font-size:1.125rem;line-height:1.7;color:var(--text)}
+.muted{color:var(--slate)}
+.body-text{color:var(--text);line-height:1.65}
+
+.work-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:2.5rem}
+.family{background:var(--paper);border-radius:1.5rem;overflow:hidden;margin-bottom:2.5rem;box-shadow:0 1px 0 rgba(18,26,43,.06)}
+.family-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid rgba(18,26,43,.08);font-family:var(--font-display),sans-serif;font-size:1.125rem;font-weight:600}
+.count{background:var(--fog);border-radius:999px;padding:.1rem .6rem;font-size:.875rem;font-weight:500;color:var(--slate)}
+.proj{display:grid;gap:.75rem;padding:1.5rem;border-bottom:1px solid rgba(18,26,43,.08)}
+.proj:last-child{border-bottom:0}
+@media(min-width:640px){.family-head,.proj{padding-left:2rem;padding-right:2rem}}
+@media(min-width:768px){.proj{grid-template-columns:14rem 1fr auto;gap:2rem}}
+.proj-name{font-weight:600;line-height:1.35}
+.proj-role{margin-top:.25rem!important;font-size:.875rem;color:var(--blue)}
+.proj-desc{max-width:38rem;line-height:1.65;color:var(--text)}
+.tags{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.75rem}
+.tags li{background:var(--fog);border-radius:.375rem;padding:.1rem .5rem;font-size:.75rem;color:var(--slate)}
+
+.timeline{border-left:2px solid var(--line);padding-left:1.75rem}
+.timeline>li{position:relative;margin-bottom:2rem}
+.timeline>li::before{content:"";position:absolute;left:-2.35rem;top:.35rem;width:1rem;height:1rem;border-radius:50%;border:4px solid var(--fog);background:rgba(18,26,43,.3)}
+.timeline>li.now::before{background:var(--sun)}
+.period{margin-left:.5rem;font-size:.875rem}
+.points{margin:.5rem 0 0;padding-left:1.25rem;color:var(--text)}
+
+.skills{display:grid;gap:2rem}
+@media(min-width:640px){.skills{grid-template-columns:1fr 1fr}}
+.skill-head{font-size:1rem;font-weight:600;margin-bottom:.75rem!important}
+
+.contact{background:var(--ink);color:#fff;padding:5rem 0}
+.contact-title{max-width:18ch;font-family:var(--font-display),sans-serif;font-size:clamp(2.25rem,6vw,4.5rem);font-weight:800;line-height:.95;letter-spacing:-.03em}
+.copy{margin-top:4rem!important;font-size:.875rem;color:rgba(255,255,255,.5)}
+@media(prefers-reduced-motion:reduce){.pf *{transition:none!important}}
+`;
