@@ -105,9 +105,9 @@ export default function Home() {
             <span className="brand-name">{profile.name}</span>
           </a>
           <div className="links">
+            <a href="#skills" className="hide-sm">Skills</a>
             <a href="#work">Work</a>
             <a href="#experience">Experience</a>
-            <a href="#skills" className="hide-sm">Skills</a>
             <a href={`mailto:${profile.email}`} className="btn btn-blue">Email me</a>
           </div>
         </nav>
@@ -168,6 +168,29 @@ export default function Home() {
           <p className="lead">{profile.about}</p>
         </section>
 
+        <section id="skills" className="block">
+          <div className="work-head reveal">
+            <h2 className="h2 big">Skills</h2>
+            <p className="muted">
+              {Object.values(profile.skills).flat().length} tools and technologies across {Object.keys(profile.skills).length} areas
+            </p>
+          </div>
+          <div className="bento">
+            {Object.entries(profile.skills).map(([group, items], i) => (
+              <article key={group} className={`skill-card reveal c${i % 4}${WIDE.includes(group) ? " wide" : ""}`}>
+                <header className="skill-top">
+                  <span className="skill-icon" aria-hidden="true">{SKILL_ICONS[group] ?? "◆"}</span>
+                  <h3 className="skill-head">{group}</h3>
+                  <span className="count">{items.length}</span>
+                </header>
+                <ul className="plain chips">
+                  {items.map((t) => <li key={t}>{t}</li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section id="work" className="block">
           <div className="work-head reveal">
             <h2 className="h2 big">Selected work</h2>
@@ -220,28 +243,6 @@ export default function Home() {
           </ol>
         </section>
 
-        <section id="skills" className="block">
-          <div className="work-head reveal">
-            <h2 className="h2 big">Skills</h2>
-            <p className="muted">
-              {Object.values(profile.skills).flat().length} tools and technologies across {Object.keys(profile.skills).length} areas
-            </p>
-          </div>
-          <div className="bento">
-            {Object.entries(profile.skills).map(([group, items], i) => (
-              <article key={group} className={`skill-card reveal c${i % 4}${WIDE.includes(group) ? " wide" : ""}`}>
-                <header className="skill-top">
-                  <span className="skill-icon" aria-hidden="true">{SKILL_ICONS[group] ?? "◆"}</span>
-                  <h3 className="skill-head">{group}</h3>
-                  <span className="count">{items.length}</span>
-                </header>
-                <ul className="plain chips">
-                  {items.map((t) => <li key={t}>{t}</li>)}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
       </div>
 
       <section className="contact">
