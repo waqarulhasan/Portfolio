@@ -19,7 +19,6 @@ const profile = {
   about:
     "Full-Stack Software Engineer with more than 7 years of experience delivering enterprise web applications, mobile applications, SaaS solutions, and cloud-native systems for international clients.",
   email: "waqarulhassan2040@gmail.com",
-  phone: "03337419194",
   cvUrl: "/cv.pdf", // put your CV in /public/cv.pdf
   socials: [
     // { label: "GitHub", href: "https://github.com/your-username" },
@@ -31,10 +30,14 @@ const profile = {
     { value: "10+", label: "Technologies" },
   ],
   skills: {
-    "Backend": [".NET Core", "ASP.NET MVC", "Node.js"],
-    "Frontend": ["Angular", "React", "Next.js"],
-    "Mobile": ["React Native", ".NET MAUI"],
-    "Data & Cloud": ["SQL Server", "PostgreSQL", "MongoDB", "Azure", "AWS", "Docker"],
+    "Backend": ["ASP.NET Core", ".NET MVC", "Python (FastAPI, Django)", "Blazor Server", "Blazor WebAssembly", "RESTful APIs", "Node.js", "NestJS", "Express", "Entity Framework Core", "Identity Server", "OAuth 2.0", "JWT", "SignalR", "Socket.IO"],
+    "Frontend": ["React", "Next.js", "Angular", "AngularJS", "HTML", "SCSS", "Tailwind CSS", "Bootstrap", "jQuery", "DataTables", "Material Design", "Syncfusion UI"],
+    "Mobile": ["React Native (TypeScript)", "Custom native plugins (C++, Java, Kotlin)", ".NET MAUI", "Ionic"],
+    "Desktop": ["WPF (MVVM)", "Avalonia UI", ".NET MAUI Desktop", "Windows Forms", "Native AOT"],
+    "Databases": ["SQL Server", "PostgreSQL", "MongoDB", "Firebase"],
+    "DevOps & Cloud": ["Docker", "Linux", "AWS (ECS, ECR, EC2, Lambda, CloudFormation, RDS, ElastiCache)", "Azure", "GCP", "IIS", "CI/CD", "Git/GitHub"],
+    "AI / Data Science": ["Python", "Pandas", "NumPy", "TensorFlow", "TensorFlow Lite", "Machine Learning", "Deep Learning", "CNN", "RNN", "CoreML", ".NET ML"],
+    "Methodologies": ["Agile", "Scrum", "SDLC", "Jira", "Trello", "Azure DevOps"],
   } as Record<string, string[]>,
   // Each card shows your role on the project. Add link: "https://..." for live links.
   projects: [
@@ -136,7 +139,7 @@ export default function Home() {
         <div className="marquee-track">
           {[0, 1].map((copy) => (
             <ul key={copy} className="plain marquee-list" aria-hidden={copy === 1}>
-              {Object.values(profile.skills).flat().map((t) => (
+              {[...new Set(Object.values(profile.skills).flat().map((t) => t.replace(/ \(.*\)$/, "")))].map((t) => (
                 <li key={t}>{t}</li>
               ))}
             </ul>
@@ -221,7 +224,6 @@ export default function Home() {
           <h2 className="contact-title reveal">Have a product to build? Let’s talk.</h2>
           <div className="row">
             <a href={`mailto:${profile.email}`} className="btn btn-yellow">{profile.email}</a>
-            {profile.phone && <a href={`tel:${profile.phone}`} className="btn btn-outline">Call {profile.phone}</a>}
             {profile.socials.map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="btn btn-outline">{s.label}</a>
             ))}
@@ -360,7 +362,7 @@ body{margin:0;background:#EEF0F3}
 
 .marquee{overflow:hidden;border-block:1px solid var(--line);background:#fff;padding:1.1rem 0;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.marquee-track{display:flex;width:max-content;animation:marquee 40s linear infinite}
+.marquee-track{display:flex;width:max-content;animation:marquee 120s linear infinite}
 .marquee:hover .marquee-track{animation-play-state:paused}
 .marquee-list{display:flex;gap:2.5rem;padding-right:2.5rem}
 .marquee-list li{font-family:var(--font-display),sans-serif;font-size:1.35rem;font-weight:600;color:var(--slate);white-space:nowrap;display:flex;align-items:center;gap:2.5rem}
