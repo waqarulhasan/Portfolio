@@ -1,10 +1,14 @@
 // app/page.tsx — Next.js (App Router). No Tailwind needed: the styles are at the bottom of this file.
 // Edit only the `profile` object below; the layout updates automatically.
 
+import type { CSSProperties } from "react";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 
 const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display" });
 const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-body" });
+
+// Sets the animation delay for an element.
+const d = (delay: string) => ({ "--d": delay }) as CSSProperties;
 
 const profile = {
   name: "Waqar UL Hassan",
@@ -93,16 +97,27 @@ export default function Home() {
 
       <div className="wrap">
         <section className="hero">
+          <div className="hero-fx" aria-hidden="true">
+            <span className="blob b1" />
+            <span className="blob b2" />
+            <span className="blob b3" />
+          </div>
           <div>
-            <p className="badge"><span className="dot" /> Available for new projects</p>
-            <h1 className="name">{profile.name}</h1>
-            <p className="title">{profile.title}</p>
-            <p className="tagline">{profile.tagline}</p>
-            <div className="row">
-              <a href="#work" className="btn btn-dark">See the projects</a>
+            <p className="badge rise" style={d("0ms")}><span className="dot" /> Available for new projects</p>
+            <h1 className="name" aria-label={profile.name}>
+              {profile.name.split(" ").map((w, i) => (
+                <span key={w + i} className="word" aria-hidden="true">
+                  <span style={d(`${120 + i * 110}ms`)}>{w}</span>
+                </span>
+              ))}
+            </h1>
+            <p className="title rise" style={d("450ms")}>{profile.title}</p>
+            <p className="tagline rise" style={d("550ms")}>{profile.tagline}</p>
+            <div className="row rise" style={d("650ms")}>
+              <a href="#work" className="btn btn-dark btn-arrow">See the projects <span aria-hidden="true">↓</span></a>
             </div>
           </div>
-          <aside className="record">
+          <aside className="record rise" style={d("500ms")}>
             <p className="record-label">Delivery record</p>
             <dl>
               {[...profile.stats, { value: String(profile.projects.length), label: "Shown here" }].map((s) => (
@@ -114,19 +129,34 @@ export default function Home() {
             </dl>
           </aside>
         </section>
+      </div>
 
-        <section className="split">
+      {/* scrolling tech strip */}
+      <div className="marquee" aria-label="Technologies">
+        <div className="marquee-track">
+          {[0, 1].map((copy) => (
+            <ul key={copy} className="plain marquee-list" aria-hidden={copy === 1}>
+              {Object.values(profile.skills).flat().map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
+
+      <div className="wrap">
+        <section className="split reveal">
           <h2 className="h2">About</h2>
           <p className="lead">{profile.about}</p>
         </section>
 
         <section id="work" className="block">
-          <div className="work-head">
+          <div className="work-head reveal">
             <h2 className="h2 big">Selected work</h2>
             <p className="muted">{profile.projects.length} projects across {families.length} product families</p>
           </div>
           {families.map((g) => (
-            <div key={g.name} className="family">
+            <div key={g.name} className="family reveal">
               <h3 className="family-head">
                 {g.name}
                 <span className="count">{g.items.length}</span>
@@ -147,7 +177,7 @@ export default function Home() {
                       )}
                     </div>
                     {p.link ? (
-                      <a href={p.link} target="_blank" rel="noreferrer" className="btn btn-small">Visit site</a>
+                      <a href={p.link} target="_blank" rel="noreferrer" className="btn btn-small btn-arrow">Visit site <span aria-hidden="true">↗</span></a>
                     ) : <span />}
                   </li>
                 ))}
@@ -156,7 +186,7 @@ export default function Home() {
           ))}
         </section>
 
-        <section id="experience" className="split">
+        <section id="experience" className="split reveal">
           <h2 className="h2">Experience</h2>
           <ol className="plain timeline">
             {profile.experience.map((e, i) => (
@@ -172,7 +202,7 @@ export default function Home() {
           </ol>
         </section>
 
-        <section id="skills" className="split">
+        <section id="skills" className="split reveal">
           <h2 className="h2">Skills</h2>
           <div className="skills">
             {Object.entries(profile.skills).map(([group, items]) => (
@@ -186,8 +216,9 @@ export default function Home() {
       </div>
 
       <section className="contact">
+        <div className="contact-glow" aria-hidden="true" />
         <div className="wrap">
-          <h2 className="contact-title">Have a product to build? Let’s talk.</h2>
+          <h2 className="contact-title reveal">Have a product to build? Let’s talk.</h2>
           <div className="row">
             <a href={`mailto:${profile.email}`} className="btn btn-yellow">{profile.email}</a>
             {profile.phone && <a href={`tel:${profile.phone}`} className="btn btn-outline">Call {profile.phone}</a>}
@@ -204,7 +235,7 @@ export default function Home() {
 
 const css = `
 .pf{--fog:#EEF0F3;--paper:#fff;--ink:#121A2B;--text:#3A4456;--slate:#5B6578;--blue:#2F4BDB;--blue-d:#2338B0;--sun:#F2B632;--line:rgba(18,26,43,.1);
-  min-height:100vh;background:var(--fog);color:var(--ink);font-family:var(--font-body),system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  min-height:100vh;overflow-x:clip;background:var(--fog);color:var(--ink);font-family:var(--font-body),system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 body{margin:0;background:#EEF0F3}
 .pf *{box-sizing:border-box}
 .pf p,.pf h1,.pf h2,.pf h3,.pf dl,.pf dd{margin:0}
@@ -284,5 +315,79 @@ body{margin:0;background:#EEF0F3}
 .contact{background:var(--ink);color:#fff;padding:5rem 0}
 .contact-title{max-width:18ch;font-family:var(--font-display),sans-serif;font-size:clamp(2.25rem,6vw,4.5rem);font-weight:800;line-height:.95;letter-spacing:-.03em}
 .copy{margin-top:4rem!important;font-size:.875rem;color:rgba(255,255,255,.5)}
-@media(prefers-reduced-motion:reduce){.pf *{transition:none!important}}
+
+/* ---------- motion & modern touches ---------- */
+.hero{position:relative;isolation:isolate}
+.hero-fx{position:absolute;inset:-4rem -20vw 0;z-index:-1;overflow:hidden;pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse at 40% 45%,#000 30%,transparent 72%);mask-image:radial-gradient(ellipse at 40% 45%,#000 30%,transparent 72%)}
+.hero-fx::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(18,26,43,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(18,26,43,.07) 1px,transparent 1px);background-size:48px 48px;animation:grid 18s linear infinite}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:float 14s ease-in-out infinite}
+.b1{width:420px;height:420px;background:#9DB0FF;top:-60px;left:10%}
+.b2{width:340px;height:340px;background:#FFD98A;top:120px;right:12%;animation-delay:-5s;animation-duration:17s}
+.b3{width:280px;height:280px;background:#9BE3C6;bottom:-80px;left:40%;animation-delay:-9s;animation-duration:20s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,25px) scale(.95)}}
+@keyframes grid{to{background-position:48px 48px}}
+
+.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms) backwards}
+.record.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms) backwards,spin 6s linear infinite}
+.word{display:inline-block;overflow:hidden;padding-bottom:.08em;margin-right:.22em;vertical-align:top}
+.word:last-child{margin-right:0}
+.word>span{display:inline-block;transform:translateY(105%);animation:wordUp .9s cubic-bezier(.2,.8,.2,1) var(--d,0ms) forwards}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes wordUp{to{transform:none}}
+
+.dot{position:relative}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:#1FA971;animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{75%,100%{transform:scale(2.6);opacity:0}}
+
+.record{border:2px solid transparent;background:linear-gradient(var(--ink),var(--ink)) padding-box,conic-gradient(from var(--a,0deg),#2F4BDB,#F2B632,#1FA971,#2F4BDB) border-box;
+  box-shadow:0 30px 60px -20px rgba(18,26,43,.45);transition:transform .4s cubic-bezier(.2,.7,.2,1);animation:spin 6s linear infinite}
+.record:hover{transform:translateY(-6px) rotate(-.6deg)}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes spin{to{--a:360deg}}
+
+.btn{position:relative}
+.btn-arrow span{display:inline-block;margin-left:.35rem;transition:transform .25s}
+.btn-arrow:hover span{transform:translate(3px,-2px)}
+.btn-dark{box-shadow:0 10px 24px -10px rgba(18,26,43,.6)}
+.btn-dark:hover{transform:translateY(-2px)}
+.btn-blue:hover{transform:translateY(-1px)}
+
+.nav-in a:not(.btn):not(.brand){position:relative}
+.nav-in a:not(.btn):not(.brand)::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.nav-in a:not(.btn):not(.brand):hover::after{transform:scaleX(1)}
+.mono{transition:transform .5s}.brand:hover .mono{transform:rotate(360deg)}
+
+.marquee{overflow:hidden;border-block:1px solid var(--line);background:#fff;padding:1.1rem 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee-track{display:flex;width:max-content;animation:marquee 40s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-list{display:flex;gap:2.5rem;padding-right:2.5rem}
+.marquee-list li{font-family:var(--font-display),sans-serif;font-size:1.35rem;font-weight:600;color:var(--slate);white-space:nowrap;display:flex;align-items:center;gap:2.5rem}
+.marquee-list li::after{content:"✦";font-size:.8rem;color:var(--sun)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+.family{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.family:hover{box-shadow:0 24px 50px -24px rgba(18,26,43,.25)}
+.proj{position:relative;transition:background .25s}
+.proj::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transition:transform .3s}
+.proj:hover{background:#F7F8FB}
+.proj:hover::before{transform:scaleY(1)}
+.proj .proj-name{transition:color .25s}.proj:hover .proj-name{color:var(--blue)}
+.tags li{transition:background .2s,color .2s}.proj:hover .tags li{background:#E4E9FF;color:var(--blue)}
+
+.contact{position:relative;overflow:hidden;isolation:isolate}
+.contact-glow{position:absolute;width:600px;height:600px;right:-150px;top:-200px;z-index:-1;border-radius:50%;
+  background:radial-gradient(circle,rgba(47,75,219,.55),transparent 65%);animation:float 16s ease-in-out infinite}
+.btn-yellow:hover{transform:translateY(-2px)}
+
+/* reveal on scroll (supported browsers); content stays visible elsewhere */
+@supports (animation-timeline: view()){
+  .reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 40%}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pf *,.pf *::before,.pf *::after{animation:none!important;transition:none!important}
+  .word>span{transform:none}
+}
 `;
