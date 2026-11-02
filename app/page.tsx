@@ -69,6 +69,21 @@ const profile = {
   ],
 };
 
+// Small symbols shown on each skill card.
+const SKILL_ICONS: Record<string, string> = {
+  Backend: "{ }",
+  Frontend: "</>",
+  Mobile: "📱",
+  Desktop: "🖥",
+  Databases: "🗄",
+  "DevOps & Cloud": "☁",
+  "AI / Data Science": "✨",
+  Methodologies: "⟳",
+};
+
+// Skill cards that take two columns on large screens (keep 4 so the grid fills evenly).
+const WIDE = ["Backend", "Frontend", "DevOps & Cloud", "AI / Data Science"];
+
 // Groups projects into product families by name; everything else is "Other products".
 const FAMILIES = ["VZTA", "Guul Prime", "YouBega", "Bee"];
 const familyOf = (name: string) => FAMILIES.find((f) => name.startsWith(f)) ?? "Other products";
@@ -205,14 +220,25 @@ export default function Home() {
           </ol>
         </section>
 
-        <section id="skills" className="split reveal">
-          <h2 className="h2">Skills</h2>
-          <div className="skills">
-            {Object.entries(profile.skills).map(([group, items]) => (
-              <div key={group}>
-                <h3 className="skill-head">{group}</h3>
-                <p className="body-text">{items.join(", ")}</p>
-              </div>
+        <section id="skills" className="block">
+          <div className="work-head reveal">
+            <h2 className="h2 big">Skills</h2>
+            <p className="muted">
+              {Object.values(profile.skills).flat().length} tools and technologies across {Object.keys(profile.skills).length} areas
+            </p>
+          </div>
+          <div className="bento">
+            {Object.entries(profile.skills).map(([group, items], i) => (
+              <article key={group} className={`skill-card reveal c${i % 4}${WIDE.includes(group) ? " wide" : ""}`}>
+                <header className="skill-top">
+                  <span className="skill-icon" aria-hidden="true">{SKILL_ICONS[group] ?? "◆"}</span>
+                  <h3 className="skill-head">{group}</h3>
+                  <span className="count">{items.length}</span>
+                </header>
+                <ul className="plain chips">
+                  {items.map((t) => <li key={t}>{t}</li>)}
+                </ul>
+              </article>
             ))}
           </div>
         </section>
@@ -310,9 +336,25 @@ body{margin:0;background:#EEF0F3}
 .period{margin-left:.5rem;font-size:.875rem}
 .points{margin:.5rem 0 0;padding-left:1.25rem;color:var(--text)}
 
-.skills{display:grid;gap:2rem}
-@media(min-width:640px){.skills{grid-template-columns:1fr 1fr}}
-.skill-head{font-size:1rem;font-weight:600;margin-bottom:.75rem!important}
+.bento{display:grid;gap:1.25rem}
+@media(min-width:700px){.bento{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.bento{grid-template-columns:repeat(3,1fr);grid-auto-flow:dense}.skill-card.wide{grid-column:span 2}}
+.skill-card{--accent:var(--blue);--tint:#E4E9FF;position:relative;overflow:hidden;background:#fff;border-radius:1.5rem;padding:1.5rem;
+  box-shadow:0 1px 0 rgba(18,26,43,.06);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.skill-card.c1{--accent:#C98A00;--tint:#FFF1CC}
+.skill-card.c2{--accent:#14855A;--tint:#D8F3E7}
+.skill-card.c3{--accent:#B4378A;--tint:#F9E0F0}
+.skill-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--accent);transform:scaleX(.15);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.skill-card::after{content:"";position:absolute;width:220px;height:220px;right:-90px;top:-90px;border-radius:50%;background:var(--tint);opacity:.7;z-index:0;transition:transform .6s}
+.skill-card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(18,26,43,.3)}
+.skill-card:hover::before{transform:scaleX(1)}
+.skill-card:hover::after{transform:scale(1.25)}
+.skill-top{position:relative;z-index:1;display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem}
+.skill-icon{display:grid;place-items:center;width:2.5rem;height:2.5rem;border-radius:.8rem;background:var(--tint);color:var(--accent);font-weight:700;font-size:.95rem;flex:none}
+.skill-head{font-family:var(--font-display),sans-serif;font-size:1.15rem;font-weight:600;flex:1}
+.chips{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:.5rem}
+.chips li{border:1px solid rgba(18,26,43,.1);background:#fff;border-radius:999px;padding:.35rem .8rem;font-size:.875rem;color:var(--text);transition:transform .2s,background .2s,color .2s,border-color .2s}
+.chips li:hover{transform:translateY(-2px);background:var(--accent);border-color:var(--accent);color:#fff}
 
 .contact{background:var(--ink);color:#fff;padding:5rem 0}
 .contact-title{max-width:18ch;font-family:var(--font-display),sans-serif;font-size:clamp(2.25rem,6vw,4.5rem);font-weight:800;line-height:.95;letter-spacing:-.03em}
