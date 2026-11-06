@@ -18,8 +18,8 @@ export default function OgImage() {
           justifyContent: "space-between",
           padding: 72,
           color: "white",
-          background:
-            "radial-gradient(60% 80% at 15% 10%, rgba(59,130,246,0.55), transparent 60%), radial-gradient(60% 80% at 90% 30%, rgba(139,92,246,0.55), transparent 60%), #05060b",
+          backgroundColor: "#05060b",
+          backgroundImage: "linear-gradient(135deg, #12235a 0%, #05060b 50%, #2a1260 100%)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -33,7 +33,7 @@ export default function OgImage() {
               justifyContent: "center",
               fontSize: 30,
               fontWeight: 800,
-              background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+              backgroundImage: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
             }}
           >
             {site.initials}
