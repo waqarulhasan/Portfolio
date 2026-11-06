@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #05060b;
+  --color-surface: #0a0c16;
+  --color-surface-2: #10132a;
+  --color-brand-blue: #3b82f6;
+  --color-brand-indigo: #6366f1;
+  --color-brand-violet: #8b5cf6;
+  --color-brand-cyan: #22d3ee;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --animate-gradient: gradient 14s ease infinite;
+  --animate-marquee: marquee 50s linear infinite;
+  --animate-wave: wave 12s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  --animate-blink: blink 1s step-end infinite;
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes wave {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-ink font-sans text-slate-300 antialiased;
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgb(139 92 246 / 0.45);
+    color: white;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Frosted glass surface used for cards, nav and form. */
+  .glass {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+  /* Card with a gradient border that lights up on hover. */
+  .glow-card {
+    position: relative;
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 0.03);
+    border: 1px solid rgb(255 255 255 / 0.07);
+    transition: border-color 0.4s, background 0.4s, transform 0.4s, box-shadow 0.4s;
+  }
+  .glow-card:hover {
+    border-color: rgb(139 92 246 / 0.45);
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: 0 0 0 1px rgb(99 102 241 / 0.15), 0 20px 60px -20px rgb(99 102 241 / 0.55);
+  }
+  .text-gradient {
+    background: linear-gradient(100deg, #93c5fd 0%, #a78bfa 45%, #f0abfc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .kicker {
+    @apply inline-flex items-center gap-3 font-mono text-xs tracking-wide text-brand-cyan;
+  }
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .section {
+    @apply relative py-24 sm:py-32;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-slate-300;
+  }
+  /* Faint grid used in section backgrounds. */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+.page-in {
+  animation: page-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes page-in {
+  from { opacity: 0; }
+}
+
+/* If JavaScript never runs, hide the intro overlay anyway. */
+.loader-failsafe {
+  animation: loader-failsafe 0.4s ease 2.5s forwards;
+}
+@keyframes loader-failsafe {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
